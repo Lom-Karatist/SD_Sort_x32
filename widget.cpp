@@ -253,4 +253,3 @@ void Widget::saveFile(QStringList typeList, QString fileOutPath, QString fileInN
         QFile::copy(fileInName, destinationFile);
     }
 }
-
