@@ -157,9 +157,20 @@ void Widget::slotGo_buttClicked(){
         *it=fileName;
     }
 
+    int n = listFiles.size();
+    QProgressDialog* pprd = new QProgressDialog("Processing the data...", "&Cancel", 0, n);
+    pprd->setMinimumDuration(2);
+    pprd->setWindowTitle("Please wait");
+    int iter = 0;
+
     foreach (QString fileName, listFiles) {
 
+        pprd->setValue(iter);
         QGuiApplication::processEvents();
+        ++iter;
+        if (pprd->wasCanceled()){
+            break;
+        }
 
         QFile fileIn(fileName);
         QString strOwner = ("Owner:");
@@ -196,6 +207,10 @@ void Widget::slotGo_buttClicked(){
         saveFile(spctr, path_to_text->text(), fileName, 0);
 
     }
+
+    pprd->setValue(n);
+    delete pprd;
+
     chkDelBaseFolder->setEnabled(true);
     chkUseAimFolder->setEnabled(true);
 }
@@ -221,7 +236,7 @@ QString Widget::findName(QString& nameType, QString& str){
         }
     }
     if (!name.isEmpty() && !name.isNull()){
-        while (name.left(1) == " "){
+        while (name.at(name.length() - 1) == ' '){
             name.remove(name.length() - 1,1);
             if (name.isEmpty() && !name.isNull()){
                 break;
@@ -236,7 +251,7 @@ QString Widget::findName(QString& nameType, QString& str){
 void Widget::saveFile(Spectrum spctr, QString fileOutPath, QString fileInName, int it){
 
     QString type = spctr.getParamAtIt(it);
-    if (!type.isEmpty() && it < 4){
+    if (!(type.isEmpty()||type == "None") && it < 4){
         fileOutPath.append("/");
         fileOutPath.append(type);
         QDir().mkdir(fileOutPath);
@@ -246,6 +261,9 @@ void Widget::saveFile(Spectrum spctr, QString fileOutPath, QString fileInName, i
     else{
         QFileInfo fileInfo(fileInName);
         QString destinationFile = fileOutPath + "/" + fileInfo.fileName();
+
+        qDebug()<<destinationFile;
+        qDebug()<<fileInName;
 
         /*QString name = typeList.at(4);
         if (name.isEmpty()){
