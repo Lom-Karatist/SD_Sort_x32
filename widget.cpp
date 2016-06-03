@@ -205,11 +205,30 @@ QString Widget::findName(QString& nameType, QString& str){
     QString name("");
     QStringList nameList = str.split(" ");
     QList<QString>::iterator it = nameList.begin();
+    //qDebug()<<name;
     for (; it != nameList.end(); ++it){
         QString str1 = *it;
         if (!str1.contains(nameType)){
             name.append(*it);
             name.append(" ");
+        }
+    }
+    //qDebug()<<name;
+    if (!name.isEmpty()){
+        while (name.at(0) == ' '){
+            name.remove(0,1);
+            if (name.isEmpty()){
+                break;
+            }
+        }
+    }
+    //qDebug()<<name;
+    if (!name.isEmpty()){
+        while (name.at(name.size() - 1) == ' '){
+            name.remove(name.size() - 1,1);
+            if (name.isEmpty()){
+                break;
+            }
         }
     }
 
@@ -221,23 +240,22 @@ void Widget::saveFile(Spectrum spctr, QString fileOutPath, QString fileInName, i
 
     QString type = spctr.getParamAtIt(it);
     if (!type.isEmpty() && it < 4){
-        //fileOutPath.append(QDir::separator());
-        //fileOutPath.append(type);
-        //QDir().mkdir(fileOutPath);
+        fileOutPath.append("/");
+        fileOutPath.append(type);
+        QDir().mkdir(fileOutPath);
         ++it;
-        //saveFile(typeList, fileOutPath, fileInName, it);
+        saveFile(spctr, fileOutPath, fileInName, it);
     }
     else{
         QFileInfo fileInfo(fileInName);
         QString destinationFile = fileOutPath + "/" + fileInfo.fileName();
-        qDebug()<<destinationFile;
-        qDebug()<<fileInName;
 
         /*QString name = typeList.at(4);
         if (name.isEmpty()){
             name = fileInfo.fileName();
         }
         QString destinationFile = fileOutPath + QDir::separator() + name + ".txt";*/
+
         QFile::copy(fileInName, destinationFile);
     }
 }
