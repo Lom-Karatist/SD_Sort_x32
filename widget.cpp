@@ -205,7 +205,6 @@ QString Widget::findName(QString& nameType, QString& str){
     QString name("");
     QStringList nameList = str.split(" ");
     QList<QString>::iterator it = nameList.begin();
-    //qDebug()<<name;
     for (; it != nameList.end(); ++it){
         QString str1 = *it;
         if (!str1.contains(nameType)){
@@ -213,7 +212,6 @@ QString Widget::findName(QString& nameType, QString& str){
             name.append(" ");
         }
     }
-    //qDebug()<<name;
     if (!name.isEmpty()){
         while (name.at(0) == ' '){
             name.remove(0,1);
@@ -222,11 +220,10 @@ QString Widget::findName(QString& nameType, QString& str){
             }
         }
     }
-    //qDebug()<<name;
-    if (!name.isEmpty()){
-        while (name.at(name.size() - 1) == ' '){
-            name.remove(name.size() - 1,1);
-            if (name.isEmpty()){
+    if (!name.isEmpty() && !name.isNull()){
+        while (name.left(1) == " "){
+            name.remove(name.length() - 1,1);
+            if (name.isEmpty() && !name.isNull()){
                 break;
             }
         }
