@@ -157,11 +157,16 @@ void Widget::slotGo_buttClicked(){
     foreach (QString fileName, listFiles) {
         QGuiApplication::processEvents();
         QFile fileIn(fileName);
-        QString strOwner = ("Owner:");
-        QString strType = ("Type:");
-        QString strClass = ("Class:");
-        QString strSubclass = ("Subclass:");
-        QString strName = ("Name:");
+        QString strConstOwner = ("Owner:");
+        QString strConstType = ("Type:");
+        QString strConstClass = ("Class:");
+        QString strConstSubclass = ("Subclass:");
+        QString strConstName = ("Name:");
+        QString strOwner = ("");
+        QString strType = ("");
+        QString strClass = ("");
+        QString strSubclass = ("");
+        QString strName = ("");
         if (fileIn.open(QIODevice::ReadOnly | QIODevice::Text)){
             QTextStream stream(&fileIn);
             QString str;
@@ -183,20 +188,20 @@ void Widget::slotGo_buttClicked(){
                 if (str.contains(strName)){
                     spctr.set_sName(findName(strName, str));
                 }*/
-                if (str.contains(strOwner)){
-                    strOwner = findName(strOwner, str);
+                if (str.contains(strConstOwner)){
+                    strOwner = findName(strConstOwner, str);
                 }
-                if (str.contains(strType)){
-                    strType = findName(strType, str);
+                if (str.contains(strConstType)){
+                    strType = findName(strConstType, str);
                 }
-                if (str.contains(strClass)){
-                    strClass = findName(strClass, str);
+                if (str.contains(strConstClass)){
+                    strClass = findName(strConstClass, str);
                 }
-                if (str.contains(strSubclass)){
-                    strSubclass = findName(strSubclass, str);
+                if (str.contains(strConstSubclass)){
+                    strSubclass = findName(strConstSubclass, str);
                 }
-                if (str.contains(strName)){
-                    strName = findName(strName, str);
+                if (str.contains(strConstName)){
+                    strName = findName(strConstName, str);
                 }
             }
         }
