@@ -1,6 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
-#include "spectrum.h"
+#include "QDebug"
+
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent)
@@ -142,6 +143,9 @@ void Widget::slotTo_buttClicked(){
 
 void Widget::slotGo_buttClicked(){
 
+    chkDelBaseFolder->setEnabled(false);
+    chkUseAimFolder->setEnabled(false);
+
     QDir inDir = QDir(path_from_text->text());
     inDir.setFilter(QDir::Files);
     QStringList listFiles = inDir.entryList();
@@ -153,27 +157,24 @@ void Widget::slotGo_buttClicked(){
         *it=fileName;
     }
 
-    //int size = listFiles.size();
     foreach (QString fileName, listFiles) {
+
         QGuiApplication::processEvents();
+
         QFile fileIn(fileName);
-        QString strConstOwner = ("Owner:");
-        QString strConstType = ("Type:");
-        QString strConstClass = ("Class:");
-        QString strConstSubclass = ("Subclass:");
-        QString strConstName = ("Name:");
-        QString strOwner = ("");
-        QString strType = ("");
-        QString strClass = ("");
-        QString strSubclass = ("");
-        QString strName = ("");
+        QString strOwner = ("Owner:");
+        QString strType = ("Type:");
+        QString strClass = ("Class:");
+        QString strSubclass = ("Subclass:");
+        QString strName = ("Name:");
+        Spectrum spctr;
+
         if (fileIn.open(QIODevice::ReadOnly | QIODevice::Text)){
             QTextStream stream(&fileIn);
             QString str;
-            //Spectrum spctr();
             while (!stream.atEnd()){
                 str = stream.readLine();
-                /*if (str.contains(strOwner)){
+                if (str.contains(strOwner)){
                     spctr.set_sOwner(findName(strOwner, str));
                 }
                 if (str.contains(strType)){
@@ -187,36 +188,16 @@ void Widget::slotGo_buttClicked(){
                 }
                 if (str.contains(strName)){
                     spctr.set_sName(findName(strName, str));
-                }*/
-                if (str.contains(strConstOwner)){
-                    strOwner = findName(strConstOwner, str);
-                }
-                if (str.contains(strConstType)){
-                    strType = findName(strConstType, str);
-                }
-                if (str.contains(strConstClass)){
-                    strClass = findName(strConstClass, str);
-                }
-                if (str.contains(strConstSubclass)){
-                    strSubclass = findName(strConstSubclass, str);
-                }
-                if (str.contains(strConstName)){
-                    strName = findName(strConstName, str);
                 }
             }
         }
         fileIn.close();
 
-        QStringList typeList;
-        typeList.append(strOwner);
-        typeList.append(strType);
-        typeList.append(strClass);
-        typeList.append(strSubclass);
-        typeList.append(strName);
-
-        saveFile(typeList, path_to_text->text(), fileName, 0);
+        saveFile(spctr, path_to_text->text(), fileName, 0);
 
     }
+    chkDelBaseFolder->setEnabled(true);
+    chkUseAimFolder->setEnabled(true);
 }
 
 QString Widget::findName(QString& nameType, QString& str){
@@ -236,19 +217,21 @@ QString Widget::findName(QString& nameType, QString& str){
     return str;
 }
 
-void Widget::saveFile(QStringList typeList, QString fileOutPath, QString fileInName, int it){
+void Widget::saveFile(Spectrum spctr, QString fileOutPath, QString fileInName, int it){
 
-    QString type = typeList.at(it);
+    QString type = spctr.getParamAtIt(it);
     if (!type.isEmpty() && it < 4){
-        fileOutPath.append(QDir::separator());
-        fileOutPath.append(type);
-        QDir().mkdir(fileOutPath);
+        //fileOutPath.append(QDir::separator());
+        //fileOutPath.append(type);
+        //QDir().mkdir(fileOutPath);
         ++it;
-        saveFile(typeList, fileOutPath, fileInName, it);
+        //saveFile(typeList, fileOutPath, fileInName, it);
     }
     else{
         QFileInfo fileInfo(fileInName);
-        QString destinationFile = fileOutPath + QDir::separator() + fileInfo.fileName();
+        QString destinationFile = fileOutPath + "/" + fileInfo.fileName();
+        qDebug()<<destinationFile;
+        qDebug()<<fileInName;
 
         /*QString name = typeList.at(4);
         if (name.isEmpty()){

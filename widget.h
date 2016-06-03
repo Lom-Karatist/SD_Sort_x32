@@ -6,6 +6,7 @@
 #include <QtWidgets>
 #include <iostream>
 #include <QFile>
+#include "spectrum.h"
 
 using namespace std;
 
@@ -44,7 +45,7 @@ public slots:
     void slotTo_buttClicked();
     void slotGo_buttClicked();
     QString findName(QString& , QString& );
-    void saveFile(QStringList , QString , QString , int );
+    void saveFile(Spectrum , QString , QString , int );
 };
 
 #endif // WIDGET_H

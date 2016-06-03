@@ -7,24 +7,26 @@ class Spectrum
 {
 public:
     Spectrum();
+    ~Spectrum();
 
     void set_sOwner(QString&);
     void set_sType(QString&);
     void set_sClass(QString&);
     void set_sSubclass(QString&);
     void set_sName(QString&);
-    QString* get_sOwner();
-    QString* get_sType();
-    QString* get_sClass();
-    QString* get_sSubclass();
-    QString* get_sName();
+    QString get_sOwner() const;
+    QString get_sType() const;
+    QString get_sClass() const;
+    QString get_sSubclass() const;
+    QString get_sName() const;
+    QString getParamAtIt(int) const;
 
 private:
-    QString* s_owner;
-    QString* s_type;
-    QString* s_class;
-    QString* s_subclass;
-    QString* s_name;
+    QString s_owner;
+    QString s_type;
+    QString s_class;
+    QString s_subclass;
+    QString s_name;
 };
 
 #endif // SPECTRUM_H
